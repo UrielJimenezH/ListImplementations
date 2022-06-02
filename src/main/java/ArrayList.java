@@ -1,11 +1,11 @@
 import java.util.Objects;
 
-public final class ArrayList<E> implements List<E>{
-    private Object[] elements;
-    private final int INITIAL_CAPACITY = 10;
+public /*final*/ class ArrayList<E> implements List<E>{
+    /*private*/protected Object[] elements;
+    private static final int INITIAL_CAPACITY = 10;
     private int size = 0;//Index of next element added
-    private final float loadThreshold = 0.75f;
-    private final int loadIncreaseFactor = 2;
+    private static final float loadThreshold = 0.75f;
+    private static final int loadIncreaseFactor = 2;
 
 
     public ArrayList() {
@@ -39,18 +39,19 @@ public final class ArrayList<E> implements List<E>{
     @SuppressWarnings("unchecked")
     @Override
     public E get(int index) {
-        //Todo should I throw an Exception ???
-        return (E) elements[index];
+        if (index >= size)
+            throw new IndexOutOfBoundsException();
+
+        return (E) elements[index];//Todo is this a safe cast ??? if don't, remove SuppressWarning annotation and fix cast
     }
 
     @Override
     public void add(E element) {
         Objects.requireNonNull(element);//Todo is this required ???
 
+        elements[size++] = element;
         if (size > elements.length * loadThreshold)
             increaseElementsCapacity();
-
-        elements[size++] = element;
     }
 
     private void increaseElementsCapacity() {
@@ -84,16 +85,15 @@ public final class ArrayList<E> implements List<E>{
             }
         }
 
+        if (foundAtIndex == -1)
+            return false;
+
         //Todo is last element set to null ???
-        if (elements.length - foundAtIndex >= 0)
-            System.arraycopy(elements, foundAtIndex + 1, elements, foundAtIndex, elements.length - foundAtIndex);
+        for (int i = foundAtIndex; i < size; i++)
+            elements[i] = elements[i + 1];
 
-        if (foundAtIndex != -1) {//Todo test if this warning is right
-            size--;
-            return true;
-        }
-
-        return false;
+        size--;
+        return true;
     }
 
     @Override

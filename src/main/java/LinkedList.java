@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-public class LinkedList<E> implements List<E> {
+public final class LinkedList<E> implements List<E> {
     private class Node {
         private final E data;
         private Node next;
@@ -10,9 +10,9 @@ public class LinkedList<E> implements List<E> {
         }
     }
 
-    private Node head = null;
-    private Node tail = null;
-    private int tailIndex = -1;
+    /*private*/ Node head = null;//Todo modify accessibility ???
+    /*private*/ Node tail = null;
+    /*private*/ int tailIndex = -1;
 
     public LinkedList() { }
 
